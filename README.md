@@ -1,41 +1,3 @@
-SpringWeb
-=========
-
-A small Spring Boot web application using Spring Data JPA and Thymeleaf.
-
-Configuration
--------------
-The application reads configuration from `src/main/resources/application.properties`.
-
-Default (development)
-- Uses an in-memory H2 database. Settings in `application.properties`:
-  - spring.datasource.url=jdbc:h2:mem:testdb
-  - spring.datasource.driverClassName=org.h2.Driver
-  - spring.datasource.username=sa
-  - spring.datasource.password=
-  - spring.jpa.hibernate.ddl-auto=create-drop
-  - H2 console enabled at `/h2-console`
-  - Server port: 8082
-
-Using MySQL (XAMPP)
-- To use your local MySQL instance (XAMPP) instead of H2, update `src/main/resources/application.properties`:
-  - Replace datasource URL with: `jdbc:mysql://localhost:3306/SpringWeb_DB?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC`
-  - Set `spring.datasource.driverClassName=com.mysql.cj.jdbc.Driver`
-  - Set `spring.datasource.username` and `spring.datasource.password` to your MySQL credentials (e.g. `root` and an empty password in XAMPP by default).
-  - Change `spring.jpa.database-platform=org.hibernate.dialect.MySQL8Dialect`
-  - For local development, `spring.jpa.hibernate.ddl-auto=update` is convenient; use `validate` or `none` in production.
-
-Quick start (Windows PowerShell)
-- Build and run using the included Maven wrapper (no local Maven required):
-
-```powershell
-# From repository root (V:\SpringWeb)
-./mvnw.cmd clean spring-boot:run
-```
-
-- Access the app after startup:
-  - Main: http://localhost:8082/
-  - H2 console: http://localhost:8082/h2-console (only with default H2 config)
 # SpringWeb
 
 A compact Spring Boot web application that demonstrates CRUD web pages + REST endpoints using:
@@ -60,43 +22,41 @@ This README covers configuration, dependencies, quick start (PowerShell), troubl
 ## Configuration
 All configuration is in `src/main/resources/application.properties`.
 
-Default (development): in-memory H2
-- URL: `jdbc:h2:mem:testdb`
-- Driver: `org.h2.Driver`
-- Username: `sa`
-- DDL: `spring.jpa.hibernate.ddl-auto=create-drop`
-- H2 console: `/h2-console`
-- Server port: `8082`
+### Default (development): in-memory H2
+- **URL**: `jdbc:h2:mem:testdb`
+- **Driver**: `org.h2.Driver`
+- **Username**: `sa`
+- **DDL**: `spring.jpa.hibernate.ddl-auto=create-drop`
+- **H2 console**: `/h2-console`
+- **Server port**: `8082`
 
-Using MySQL (XAMPP) instead of H2
-1. Create the database in MySQL (XAMPP):
+### Using MySQL (XAMPP) instead of H2
+1.  **Create the database** in MySQL (e.g., via phpMyAdmin in XAMPP):
+    ```sql
+    CREATE DATABASE SpringWeb_DB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+    ```
+2.  **Update `src/main/resources/application.properties`** with your MySQL details:
+    ```properties
+    spring.datasource.url=jdbc:mysql://localhost:3306/SpringWeb_DB?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    spring.datasource.driverClassName=com.mysql.cj.jdbc.Driver
+    spring.datasource.username=root
+    spring.datasource.password=
+    spring.jpa.database-platform=org.hibernate.dialect.MySQL8Dialect
+    spring.jpa.hibernate.ddl-auto=update
+    ```
+3.  **Ensure MySQL server is running** in XAMPP. The `mysql-connector-j` dependency is already included in `pom.xml`.
 
-   CREATE DATABASE SpringWeb_DB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+> **Security Note**: Do not store production passwords in `application.properties`. Use environment variables or a secrets manager for production environments.
 
-2. Update `src/main/resources/application.properties` (example):
+## Key Dependencies (from `pom.xml`)
+- `spring-boot-starter-web`: For building web applications with an embedded Tomcat server.
+- `spring-boot-starter-data-jpa`: For data persistence using JPA and Hibernate.
+- `spring-boot-starter-thymeleaf`: For server-side HTML templating.
+- `spring-boot-starter-validation`: For data validation.
+- `mysql-connector-j`: MySQL JDBC driver (runtime).
+- `lombok`: To reduce boilerplate code (optional).
 
-   spring.datasource.url=jdbc:mysql://localhost:3306/SpringWeb_DB?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-   spring.datasource.driverClassName=com.mysql.cj.jdbc.Driver
-   spring.datasource.username=root
-   spring.datasource.password=
-   spring.jpa.database-platform=org.hibernate.dialect.MySQL8Dialect
-   spring.jpa.hibernate.ddl-auto=update
-
-3. Ensure MySQL server is running in XAMPP and the `mysql-connector-j` dependency is present in `pom.xml` (this project already includes it).
-
-Security note: do not store production passwords in `application.properties`. Use environment variables or externalized configuration (see Spring Boot docs).
-
-## Key dependencies (see `pom.xml`)
-- spring-boot-starter-web — web and embedded Tomcat
-- spring-boot-starter-data-jpa — JPA and Hibernate
-- spring-boot-starter-thymeleaf — server-side templates
-- spring-boot-starter-validation
-- spring-boot-starter-actuator (optional monitoring)
-- mysql-connector-j (runtime) — MySQL driver
-- lombok (optional, used in the project)
-
-If you need the H2 driver on the classpath add:
-
+If you need to use the H2 database, ensure the following dependency is in your `pom.xml`:
 ```xml
 <dependency>
   <groupId>com.h2database</groupId>
@@ -105,51 +65,55 @@ If you need the H2 driver on the classpath add:
 </dependency>
 ```
 
-## Quick start (Windows PowerShell)
-- From the repository root (e.g. `V:\SpringWeb`):
+## Quick Start (Windows PowerShell)
+From the project root directory (e.g., `V:\SpringWeb`):
 
+### Run the application
 ```powershell
-# Run the app
 ./mvnw.cmd clean spring-boot:run
+```
 
-# Build runnable JAR
+### Build a runnable JAR
+```powershell
 ./mvnw.cmd clean package
 java -jar target\SpringWeb-0.0.1-SNAPSHOT.jar
 ```
 
-- Open in browser when startup finishes:
-  - App: http://localhost:8082/
-  - H2 console (if using H2): http://localhost:8082/h2-console
-
-## Running tests
-- Run unit tests with:
-
+### Run tests
 ```powershell
 ./mvnw.cmd test
 ```
 
+Once the application is running, you can access it at:
+- **Application**: [http://localhost:8082/](http://localhost:8082/)
+- **H2 Console** (if using H2): [http://localhost:8082/h2-console](http://localhost:8082/h2-console)
+
+## IDE Quick Start (Java 21)
+
+### JetBrains IntelliJ IDEA
+1.  **Prerequisites**: IntelliJ IDEA (Community or Ultimate) with Java 21 JDK configured.
+2.  **Open Project**: Go to `File > Open` and select the project's `pom.xml` file or the root folder `SpringWeb`.
+3.  **Build**: Allow IntelliJ to resolve Maven dependencies automatically.
+4.  **Run**:
+    *   Navigate to `src/main/java/com/springweb/SpringWebApplication.java`.
+    *   Click the green play icon next to the `main` method to run the application.
+
+### Visual Studio Code
+1.  **Prerequisites**: VS Code with the [Extension Pack for Java](https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack) installed and Java 21 JDK configured.
+2.  **Open Project**: Go to `File > Open Folder...` and select the `SpringWeb` root folder.
+3.  **Build**: The Java extension will automatically detect the Maven project and build it.
+4.  **Run**:
+    *   Navigate to `src/main/java/com/springweb/SpringWebApplication.java`.
+    *   Click the **Run** button that appears above the `main` method.
+
 ## Troubleshooting
-- "Unable to find a single main class": remove duplicate classes containing `public static void main` annotated with `@SpringBootApplication`. Keep the main class `com.springweb.SpringWebApplication`.
-- "Cannot load driver class: org.h2.Driver": add H2 dependency or switch to MySQL and ensure the correct driver (`mysql-connector-j`) is on the classpath.
-- Database connection failures: verify MySQL service is running, credentials are correct, and the `SpringWeb_DB` database exists.
-- Port conflicts: change `server.port` in `application.properties`.
+- **"Unable to find a single main class"**: This error occurs if there are multiple classes with a `main` method annotated with `@SpringBootApplication`. Ensure only `com.springweb.SpringWebApplication` is present.
+- **"Cannot load driver class: org.h2.Driver"**: Add the H2 dependency to `pom.xml` or switch to the MySQL configuration.
+- **Database Connection Failures**: Verify that your MySQL service is running, the credentials in `application.properties` are correct, and the `SpringWeb_DB` database exists.
+- **Port Conflicts**: If port `8082` is in use, change `server.port` in `application.properties`.
 
-If a build error references multiple main class candidates, search for additional `SpringWebApplication` files and remove or rename duplicates.
+## Development Tips
+- **IDE Integration**: Import the project as a Maven project in your IDE (e.g., IntelliJ IDEA, VS Code, Eclipse). You can run the `SpringWebApplication` class directly from your IDE for faster development cycles.
+- **Lombok**: If you use Lombok, ensure you have the Lombok plugin installed and annotation processing enabled in your IDE.
+- **Database Schema**: For local development, `spring.jpa.hibernate.ddl-auto=update` is convenient. For production, it's recommended to use `validate` or `none` and manage schema changes with a migration tool like Flyway or Liquibase.
 
-## Development tips
-- IDE: import as a Maven project (IntelliJ IDEA, Eclipse). Run the `SpringWebApplication` class from your IDE for quick iteration.
-- Lombok: enable annotation processing in your IDE if you use Lombok features.
-- Use `spring.jpa.hibernate.ddl-auto=update` for local dev; switch to `validate` or `none` for production and manage schema with migrations (Flyway/Liquibase).
-
-## Where to look in the code
-- Main class: `src/main/java/com/springweb/SpringWebApplication.java`
-- Controllers: `src/main/java/com/springweb/controller`
-- Entities: `src/main/java/com/springweb/entity`
-- Repositories: `src/main/java/com/springweb/repository`
-- Templates: `src/main/resources/templates`
-
-## Want me to configure MySQL now?
-If you want, I can update `src/main/resources/application.properties` to point to your XAMPP MySQL (provide username and whether the password is empty), and then run a quick build to verify startup. Do not paste secrets in public workspaces.
-
----
-Edited: concise guide for running and configuring the project locally.
