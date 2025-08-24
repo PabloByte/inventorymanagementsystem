@@ -1,119 +1,219 @@
 # SpringWeb
 
-A compact Spring Boot web application that demonstrates CRUD web pages + REST endpoints using:
-- Spring Boot (web, data-jpa, thymeleaf)
-- Spring Data JPA (Hibernate)
-- Thymeleaf templates
+A compact Spring Boot web application demonstrating CRUD operations with REST endpoints and web pages.
 
-This README covers configuration, dependencies, quick start (PowerShell), troubleshooting and developer tips.
+## 🚀 Quick Overview
 
-## Project layout
-- `src/main/java` - application source (controllers, entities, repositories)
-- `src/main/resources/application.properties` - main configuration
-- `src/main/resources/templates` - Thymeleaf templates (UI)
-- `pom.xml` - Maven project and dependencies
+This project uses:
+- **Spring Boot** (web, data-jpa, thymeleaf)
+- **Spring Data JPA** with Hibernate
+- **Thymeleaf** templates for UI
+- **Java 21** (recommended)
 
-## Prerequisites
-- Java 17+ (the project `pom.xml` sets `<java.version>17</java.version>`)
-- Git (optional)
-- XAMPP MySQL (optional) if you want to use MySQL instead of H2
-- No local Maven required — the project contains the Maven wrapper (`mvnw.cmd`)
+---
 
-## Configuration
-All configuration is in `src/main/resources/application.properties`.
+## 📋 Prerequisites
 
-### Default (development): in-memory H2
-- **URL**: `jdbc:h2:mem:testdb`
-- **Driver**: `org.h2.Driver`
-- **Username**: `sa`
-- **DDL**: `spring.jpa.hibernate.ddl-auto=create-drop`
-- **H2 console**: `/h2-console`
-- **Server port**: `8082`
+Before you start, make sure you have:
 
-### Using MySQL (XAMPP) instead of H2
-1.  **Create the database** in MySQL (e.g., via phpMyAdmin in XAMPP):
-    ```sql
-    CREATE DATABASE SpringWeb_DB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-    ```
-2.  **Update `src/main/resources/application.properties`** with your MySQL details:
-    ```properties
-    spring.datasource.url=jdbc:mysql://localhost:3306/SpringWeb_DB?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-    spring.datasource.driverClassName=com.mysql.cj.jdbc.Driver
-    spring.datasource.username=root
-    spring.datasource.password=
-    spring.jpa.database-platform=org.hibernate.dialect.MySQL8Dialect
-    spring.jpa.hibernate.ddl-auto=update
-    ```
-3.  **Ensure MySQL server is running** in XAMPP. The `mysql-connector-j` dependency is already included in `pom.xml`.
+- ☑️ **Java 21 JDK** (required)
+- ☑️ **Git** (for cloning)
+- ☑️ **VS Code** or **JetBrains IntelliJ IDEA**
+- ☑️ **XAMPP MySQL** (optional - for MySQL database)
 
-> **Security Note**: Do not store production passwords in `application.properties`. Use environment variables or a secrets manager for production environments.
+---
 
-## Key Dependencies (from `pom.xml`)
-- `spring-boot-starter-web`: For building web applications with an embedded Tomcat server.
-- `spring-boot-starter-data-jpa`: For data persistence using JPA and Hibernate.
-- `spring-boot-starter-thymeleaf`: For server-side HTML templating.
-- `spring-boot-starter-validation`: For data validation.
-- `mysql-connector-j`: MySQL JDBC driver (runtime).
-- `lombok`: To reduce boilerplate code (optional).
+## 🛠️ IDE Setup Guide
 
-If you need to use the H2 database, ensure the following dependency is in your `pom.xml`:
-```xml
-<dependency>
-  <groupId>com.h2database</groupId>
-  <artifactId>h2</artifactId>
-  <scope>runtime</scope>
-</dependency>
+### Option 1: Visual Studio Code
+
+#### 1. Install Required Extensions
+Install the [Extension Pack for Java](https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack) which includes:
+- Language Support for Java
+- Debugger for Java
+- Test Runner for Java
+- Maven for Java
+- Spring Boot Extension Pack
+
+#### 2. Configure Java 21
+1. Open VS Code settings (`Ctrl+,` or `Cmd+,`)
+2. Search for "java home"
+3. Set `java.configuration.runtimes` to point to your Java 21 installation:
+   ```json
+   "java.configuration.runtimes": [
+     {
+       "name": "JavaSE-21",
+       "path": "/path/to/your/java21"
+     }
+   ]
+   ```
+
+#### 3. Open the Project
+1. Open VS Code
+2. Go to `File > Open Folder...`
+3. Select the `SpringWeb` project folder
+4. VS Code will automatically detect the Maven project and download dependencies
+
+#### 4. Run the Application
+1. Navigate to `src/main/java/com/springweb/SpringWebApplication.java`
+2. Click the **"Run"** button that appears above the `main` method
+3. Or use the Command Palette (`Ctrl+Shift+P`) and type "Java: Run"
+
+---
+
+### Option 2: JetBrains IntelliJ IDEA
+
+#### 1. Configure Java 21 SDK
+1. Open IntelliJ IDEA
+2. Go to `File > Project Structure > Project`
+3. Set **Project SDK** to Java 21
+4. Set **Project language level** to 21
+
+#### 2. Open the Project
+1. Go to `File > Open`
+2. Select the project's `pom.xml` file or the root `SpringWeb` folder
+3. Choose **"Open as Project"**
+4. IntelliJ will automatically import Maven dependencies
+
+#### 3. Verify SDK Configuration
+1. Go to `File > Project Structure > Modules`
+2. Ensure the **Language level** is set to 21
+3. Check that **Dependencies** shows Java 21
+
+#### 4. Run the Application
+1. Navigate to `src/main/java/com/springweb/SpringWebApplication.java`
+2. Click the green ▶️ icon next to the `main` method
+3. Or right-click the file and select **"Run 'SpringWebApplication'"**
+
+---
+
+## 🗂️ Project Structure
+
+```
+SpringWeb/
+├── src/main/java/           # Java source code
+│   └── com/springweb/       # Main package
+├── src/main/resources/      # Resources
+│   ├── templates/           # Thymeleaf templates
+│   └── application.properties  # Configuration
+├── pom.xml                  # Maven dependencies
+└── mvnw.cmd                # Maven wrapper (Windows)
 ```
 
-## Quick Start (Windows PowerShell)
-From the project root directory (e.g., `V:\SpringWeb`):
+---
 
-### Run the application
-```powershell
+## ⚙️ Configuration Options
+
+### Default Setup (H2 In-Memory Database)
+No additional setup required! The application uses:
+- **Database**: H2 in-memory
+- **Port**: 8082
+- **H2 Console**: http://localhost:8082/h2-console
+
+### MySQL Setup (Optional)
+If you prefer MySQL:
+
+1. **Start XAMPP** and ensure MySQL is running
+2. **Create database** in phpMyAdmin:
+   ```sql
+   CREATE DATABASE SpringWeb_DB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+   ```
+3. **Update** `src/main/resources/application.properties`:
+   ```properties
+   spring.datasource.url=jdbc:mysql://localhost:3306/SpringWeb_DB?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+   spring.datasource.driverClassName=com.mysql.cj.jdbc.Driver
+   spring.datasource.username=root
+   spring.datasource.password=
+   spring.jpa.database-platform=org.hibernate.dialect.MySQL8Dialect
+   spring.jpa.hibernate.ddl-auto=update
+   ```
+
+---
+
+## 🚀 Running the Application
+
+### Method 1: Using Maven Wrapper (Command Line)
+```bash
+# Windows
 ./mvnw.cmd clean spring-boot:run
+
+# macOS/Linux
+./mvnw clean spring-boot:run
 ```
 
-### Build a runnable JAR
-```powershell
+### Method 2: Using IDE (Recommended)
+- **VS Code**: Click "Run" button above the main method
+- **IntelliJ**: Click the green play button next to the main method
+
+### Method 3: Building JAR
+```bash
 ./mvnw.cmd clean package
-java -jar target\SpringWeb-0.0.1-SNAPSHOT.jar
+java -jar target/SpringWeb-0.0.1-SNAPSHOT.jar
 ```
 
-### Run tests
-```powershell
+---
+
+## 🌐 Access the Application
+
+Once running, visit:
+- **Main Application**: http://localhost:8082/
+- **H2 Database Console**: http://localhost:8082/h2-console (if using H2)
+
+---
+
+## 🧪 Running Tests
+
+```bash
+# Command line
 ./mvnw.cmd test
+
+# VS Code: Use Test Explorer panel
+# IntelliJ: Right-click test folder > Run All Tests
 ```
 
-Once the application is running, you can access it at:
-- **Application**: [http://localhost:8082/](http://localhost:8082/)
-- **H2 Console** (if using H2): [http://localhost:8082/h2-console](http://localhost:8082/h2-console)
+---
 
-## IDE Quick Start (Java 21)
+## 🔧 Troubleshooting
 
-### JetBrains IntelliJ IDEA
-1.  **Prerequisites**: IntelliJ IDEA (Community or Ultimate) with Java 21 JDK configured.
-2.  **Open Project**: Go to `File > Open` and select the project's `pom.xml` file or the root folder `SpringWeb`.
-3.  **Build**: Allow IntelliJ to resolve Maven dependencies automatically.
-4.  **Run**:
-    *   Navigate to `src/main/java/com/springweb/SpringWebApplication.java`.
-    *   Click the green play icon next to the `main` method to run the application.
+### Common Issues & Solutions
 
-### Visual Studio Code
-1.  **Prerequisites**: VS Code with the [Extension Pack for Java](https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack) installed and Java 21 JDK configured.
-2.  **Open Project**: Go to `File > Open Folder...` and select the `SpringWeb` root folder.
-3.  **Build**: The Java extension will automatically detect the Maven project and build it.
-4.  **Run**:
-    *   Navigate to `src/main/java/com/springweb/SpringWebApplication.java`.
-    *   Click the **Run** button that appears above the `main` method.
+| Issue | Solution |
+|-------|----------|
+| "Unable to find a single main class" | Ensure only one class has `@SpringBootApplication` |
+| "Cannot load driver class: org.h2.Driver" | Add H2 dependency to `pom.xml` or switch to MySQL |
+| Port 8082 already in use | Change `server.port` in `application.properties` |
+| Java version conflicts | Verify IDE is using Java 21 SDK |
+| Maven dependencies not loading | Reload Maven project in IDE |
 
-## Troubleshooting
-- **"Unable to find a single main class"**: This error occurs if there are multiple classes with a `main` method annotated with `@SpringBootApplication`. Ensure only `com.springweb.SpringWebApplication` is present.
-- **"Cannot load driver class: org.h2.Driver"**: Add the H2 dependency to `pom.xml` or switch to the MySQL configuration.
-- **Database Connection Failures**: Verify that your MySQL service is running, the credentials in `application.properties` are correct, and the `SpringWeb_DB` database exists.
-- **Port Conflicts**: If port `8082` is in use, change `server.port` in `application.properties`.
+### IDE-Specific Issues
 
-## Development Tips
-- **IDE Integration**: Import the project as a Maven project in your IDE (e.g., IntelliJ IDEA, VS Code, Eclipse). You can run the `SpringWebApplication` class directly from your IDE for faster development cycles.
-- **Lombok**: If you use Lombok, ensure you have the Lombok plugin installed and annotation processing enabled in your IDE.
-- **Database Schema**: For local development, `spring.jpa.hibernate.ddl-auto=update` is convenient. For production, it's recommended to use `validate` or `none` and manage schema changes with a migration tool like Flyway or Liquibase.
+#### VS Code
+- **Extensions not working**: Restart VS Code after installing Java extensions
+- **Syntax errors**: Ensure Java 21 is set in settings
+- **Build failures**: Use Command Palette > "Java: Reload Projects"
 
+#### IntelliJ IDEA
+- **Red underlines**: File > Invalidate Caches and Restart
+- **Maven sync issues**: Click the Maven refresh button in the Maven panel
+- **Run configuration missing**: Create new Application run configuration
+
+---
+
+## 📦 Key Dependencies
+
+- `spring-boot-starter-web` - Web application support
+- `spring-boot-starter-data-jpa` - Database persistence
+- `spring-boot-starter-thymeleaf` - Template engine
+- `spring-boot-starter-validation` - Data validation
+- `mysql-connector-j` - MySQL driver
+- `lombok` - Reduce boilerplate code
+
+---
+
+## 💡 Development Tips
+
+- 🔄 **Hot Reload**: Use Spring Boot DevTools for automatic restarts during development
+- 🗃️ **Database**: H2 console is great for development, MySQL for production-like testing  
+- 🔧 **Lombok**: Install Lombok plugin in your IDE and enable annotation processing
+- 📁 **Project Import**: Always import as Maven project for proper dependency management
+- 🐛 **Debugging**: Both IDEs support full debugging with breakpoints
