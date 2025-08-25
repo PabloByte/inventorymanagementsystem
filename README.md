@@ -1,55 +1,63 @@
-# SpringWeb
+# Operation Spring Web
 
 A compact Spring Boot web application demonstrating CRUD operations with REST endpoints and web pages.
 
-##  Quick Overview
+## Quick Start
 
-This project uses:
-- **Spring Boot** (web, data-jpa, thymeleaf)
-- **Spring Data JPA** with Hibernate
-- **Thymeleaf** templates for UI
-- **Java 21** (recommended)
+This guide will help you get "Operation Spring Web" up and running quickly.
 
+### Prerequisites
 
-##  Running the Application
+*   **Java 21**: Ensure you have Java Development Kit (JDK) 21 installed.
+*   **Maven**: This project uses Maven for dependency management and building.
 
-### Method 1: Using Maven Wrapper (Command Line)
+### Running the Application
+
+There are two primary ways to run this application:
+
+#### Method 1: Using Maven Wrapper (Command Line)
+
+Navigate to the project's root directory in your terminal and execute the following command:
+
 ```bash
-# Windows
-./mvnw.cmd clean spring-boot:run
- 
+./mvnw clean spring-boot:run
+```
 
----
+This command will clean the project, build it, and then start the Spring Boot application.
 
-##  Troubleshooting
+#### Method 2: Using an IDE (IntelliJ IDEA / VS Code)
 
-### Common Issues & Solutions
+1.  **Import the Project**: Open your IDE and import the project as a Maven project.
+    *   **IntelliJ IDEA**: Open -> Navigate to the project's `pom.xml` file and select it.
+    *   **VS Code**: File -> Open Folder -> Select the project's root directory. Ensure you have the necessary Java extensions installed.
+2.  **Run the Application**:
+    *   **IntelliJ IDEA**: Locate the `SpringWebApplication.java` file (usually in `src/main/java/com/springweb/`) and run it directly from the IDE (e.g., right-click and select "Run 'SpringWebApplication.main()'").
+    *   **VS Code**: Use the "Run" button or the "Run and Debug" view to start the application.
 
-| Issue | Solution |
-|-------|----------|
-| "Unable to find a single main class" | Ensure only one class has `@SpringBootApplication` |
-| "Cannot load driver class: org.h2.Driver" | Add H2 dependency to `pom.xml` or switch to MySQL |
-| Port 8082 already in use | Change `server.port` in `application.properties` |
-| Java version conflicts | Verify IDE is using Java 21 SDK |
-| Maven dependencies not loading | Reload Maven project in IDE |
+### Accessing the Application
 
-### IDE-Specific Issues
+Once the application is running, you can access it in your web browser:
 
-#### VS Code
-- **Extensions not working**: Restart VS Code after installing Java extensions
-- **Syntax errors**: Ensure Java 21 is set in settings
-- **Build failures**: Use Command Palette > "Java: Reload Projects"
+*   **Login Page**: `http://localhost:8082/login` (Default port is 8082)
+*   **Dashboard**: `http://localhost:8082/dashboard` (After successful login)
 
-#### IntelliJ IDEA
-- **Red underlines**: File > Invalidate Caches and Restart
-- **Maven sync issues**: Click the Maven refresh button in the Maven panel
-- **Run configuration missing**: Create new Application run configuration
+**Demo Credentials**:
+*   **Username**: `admin`
+*   **Password**: `admin`
 
- 
-##  Development Tips
+## Project Structure
 
-- 🔄 **Hot Reload**: Use Spring Boot DevTools for automatic restarts during development
-- 🗃️ **Database**: H2 console is great for development, MySQL for production-like testing  
-- 🔧 **Lombok**: Install Lombok plugin in your IDE and enable annotation processing
-- 📁 **Project Import**: Always import as Maven project for proper dependency management
-- 🐛 **Debugging**: Both IDEs support full debugging with breakpoints
+This project utilizes:
+
+*   **Spring Boot**: For rapid application development.
+*   **Spring Data JPA**: For database interaction.
+*   **Thymeleaf**: For server-side rendered web pages.
+*   **H2 Database**: An in-memory database for development purposes.
+
+## Troubleshooting
+
+If you encounter issues, consider the following common solutions:
+
+*   **Port Conflict**: If port 8082 is already in use, you can change it in `src/main/resources/application.properties` by modifying `server.port`.
+*   **Java Version**: Ensure your IDE and environment are configured to use Java 21.
+*   **Maven Issues**: If dependencies are not resolving, try reloading the Maven project in your IDE or running `mvn clean install` from the command line.
