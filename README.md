@@ -17,11 +17,7 @@ This project uses:
 ```bash
 # Windows
 ./mvnw.cmd clean spring-boot:run
-
-# macOS/Linux
-./mvnw clean spring-boot:run
-```
-
+ 
 
 ---
 
@@ -49,8 +45,7 @@ This project uses:
 - **Maven sync issues**: Click the Maven refresh button in the Maven panel
 - **Run configuration missing**: Create new Application run configuration
 
-
-
+this is for testing commit )
 ##  Development Tips
 
 - 🔄 **Hot Reload**: Use Spring Boot DevTools for automatic restarts during development
