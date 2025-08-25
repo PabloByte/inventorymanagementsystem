@@ -1,9 +1,4 @@
-
-
- Spring web
- <!-- This for testing  -->
-
-
+## Spring Web Operation
 
 A compact Spring Boot web application demonstrating CRUD operations with REST endpoints and web pages.
 
