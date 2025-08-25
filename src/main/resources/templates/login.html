@@ -3,30 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - SpringWeb Admin</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <title>Operation Spring Web - Login</title>
+    <link rel="stylesheet" href="/css/login.css">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
 </head>
 <body class="login-body">
     <div class="login-container">
-        <div class="login-card">
-            <div class="login-header">
-                <h1>SpringWeb Admin</h1>
-                <p>Please sign in to your account</p>
+        <div class="login-header">
+            <img src="https://github.com/TBEITBC.png" alt="Emblem" class="emblem">
+            <h1>OPERATION SPRING WEB</h1>
+            <p class="sub-header">The machine obeys no one—unless you command it</p>
+        </div>
+        <form id="loginForm" class="login-form">
+            <div class="form-group">
+                <label for="username">User:</label>
+                <input type="text" id="username" name="username" required>
             </div>
-            <form id="loginForm" class="login-form">
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required>
-                </div>
-                <button type="submit" class="login-btn">Sign In</button>
-            </form>
-            <div class="login-footer">
-                <p>Demo credentials: admin / admin</p>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
             </div>
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+        <div class="warning-footer">
+            <p>THIS IS A SECURED AND MONITORED SYSTEM. UNAUTHORIZED ACCESS IS STRICTLY PROHIBITED.</p>
         </div>
     </div>
 
