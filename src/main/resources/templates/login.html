@@ -37,7 +37,7 @@
             const password = document.getElementById('password').value;
             
             // Simple demo authentication
-            if (username === 'admin' && password === 'admin') {
+            if (username === 'admin' && password === 'whoami') {
                 localStorage.setItem('isLoggedIn', 'true');
                 localStorage.setItem('username', username);
                 window.location.href = '/dashboard';
