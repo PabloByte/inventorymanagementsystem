@@ -1,0 +1,55 @@
+# src/main/resources/application-local.yml
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/inventario
+    username: postgres
+    password: admin123
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate        # valida contra Flyway
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        naming:
+          physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+          implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+
+  flyway:
+    url: jdbc:postgresql://localhost:5432/inventario
+    user: postgres
+    password: admin123
+    baseline-on-migrate: true
+
+  # 🔥 Hot reload amable en front
+  thymeleaf:
+    cache: false
+  web:
+    resources:
+      cache:
+        period: 0
+      chain:
+        cache: false
+
+# LiveReload de devtools (el browser plugin se conecta al puerto 35729)
+# management.server.port: 8081  # si luego quieres separar actuator
+
+server:
+  error:
+    include-message: always
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
+
+
+
+

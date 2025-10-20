@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Categorías - SpringWeb Admin</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css" />
+
+  <style>
+    /* ====== Detalle de productos (tabla expandible) ====== */
+    .products-wrapper { padding: 8px 0; }
+    .products-list { overflow:auto; }
+    .table.table-sm { font-size: .92rem; }
+    .table.table-sm th, .table.table-sm td { padding: 6px 8px; vertical-align: top; }
+
+    /* ====== Modal básico (sin colisionar con .modal global) ====== */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.45);
+      display: none; /* pages.js lo pone en "flex" al abrir */
+      z-index: 999;
+      align-items: center; justify-content: center;
+    }
+    .modal-panel {
+      background: #fff; color: #222;
+      width: min(520px, 92vw);
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.2);
+      overflow: hidden;
+      display: block; /* evita que algún CSS global lo oculte */
+    }
+    .modal-panel .modal-header,
+    .modal-panel .modal-footer {
+      padding: 12px 16px; background: #f7f7f9;
+      border-bottom: 1px solid #e9e9ef;
+    }
+    .modal-panel .modal-header {
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .modal-panel .modal-body { padding: 16px; }
+    .modal-panel .modal-title { margin: 0; font-size: 1.05rem; font-weight: 600; }
+    .form-row { margin-bottom: 12px; }
+    .form-row label { display:block; font-size:.9rem; margin-bottom:6px; color:#555; }
+    .form-row input[type="text"], .form-row textarea {
+      width:100%; padding:8px 10px; border:1px solid #d9d9e3; border-radius:6px; font:inherit;
+    }
+    .form-row textarea { min-height: 90px; resize: vertical; }
+    .modal-actions { display:flex; gap:8px; justify-content:flex-end; }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <div class="sidebar-header"><h2><i class="fas fa-cogs"></i> Stark Ingenieria</h2></div>
+      <ul class="sidebar-menu">
+        <li><a href="/pages/dashboard.html" class="menu-item"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li><a href="/pages/category.html" class="menu-item"><i class="fas fa-tags"></i> Categorias</a></li>
+           <li><a href="/pages/supplier.html" class="menu-item active"><i class="fas fa-truck"></i> Proveedores</a></li>
+            <li><a href="/pages/product.html" class="menu-item active"><i class="fas fa-truck"></i> Productos</a></li>
+      </ul>
+    </nav>
+
+    <!-- Main -->
+    <main class="main-content">
+      <header class="content-header">
+        <h1 id="pageTitle">Categorías</h1>
+        <div class="user-info"><span id="currentUser">Bienvenido, Administrador</span></div>
+      </header>
+
+      <div class="content-area">
+        <div class="card">
+          <div class="card-header card-header--flex">
+            <h2 class="card-title"><i class="fas fa-tags"></i> Listado de Categorías</h2>
+            <div class="card-actions">
+              <button id="btnRefreshCategories" class="btn btn-secondary"><i class="fas fa-rotate"></i> Actualizar</button>
+              <button id="btnNewCategory" class="btn btn-primary"><i class="fas fa-plus"></i> Nueva</button>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <div id="category-empty" class="muted" style="display:none">No hay categorías para mostrar.</div>
+            <div class="table-responsive">
+              <table id="categoriesTable" class="table">
+                <thead>
+                  <tr>
+                    <th style="width:44px"></th>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Productos</th>
+                    <th style="width:88px">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td colspan="6">Cargando… desde html 1</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Templates -->
+      <template id="tpl-category-row">
+        <tr class="cat-row" data-id="">
+          <td class="toggle-cell">
+            <button class="btn btn-icon btn-toggle" title="Ver productos">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </td>
+          <td class="cat-id"></td>
+          <td class="cat-name"></td>
+          <td class="cat-desc"></td>
+          <td class="cat-products-count"></td>
+          <td class="cat-actions">
+            <button class="btn btn-compact btn-outline btn-edit" title="Editar">
+              <i class="fas fa-pen"></i>
+            </button>
+            <!-- Eliminar oculto por ahora
+            <button class="btn btn-compact btn-outline btn-delete" title="Eliminar">
+              <i class="fas fa-trash"></i>
+            </button>
+            -->
+          </td>
+        </tr>
+      </template>
+
+      <template id="tpl-category-products">
+        <tr class="cat-products-row" data-id="">
+          <td></td>
+          <td colspan="5">
+            <div class="products-wrapper">
+              <div class="products-list"></div>
+            </div>
+          </td>
+        </tr>
+      </template>
+
+      <template id="tpl-product-chip">
+        <span class="chip product-chip" title=""></span>
+      </template>
+    </main>
+  </div>
+
+  <!-- Modal Crear/Editar Categoría -->
+  <div id="categoryModal" class="modal-overlay">
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="catModalTitle">
+      <div class="modal-header">
+        <h3 id="catModalTitle" class="modal-title" data-title>Categoria</h3>
+      </div>
+
+      <form id="categoryForm">
+        <div class="modal-body">
+          <div class="form-row">
+            <label for="catName">Nombre <span style="color:#c33">*</span></label>
+            <input type="text" id="catName" name="name" placeholder="Ej. Periféricos" required />
+          </div>
+          <div class="form-row">
+            <label for="catDesc">Descripción</label>
+            <textarea id="catDesc" name="description" placeholder="Descripción de la categoría (opcional)"></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" id="btnCancelCategory">Cancelar</button>
+            <button type="submit" class="btn btn-primary" id="btnSaveCategory">Guardar</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts (env -> entities -> service -> UI -> pages) -->
+  <script type="module" src="/js/config/env.js"></script>
+  <script type="module" src="/js/entities/Product.js"></script>
+  <script type="module" src="/js/entities/category.js"></script>
+  <script type="module" src="/js/services/CategoryService.js"></script>
+  <script type="module" src="/js/category.js"></script>
+  <script type="module" src="/js/pages/category.pages.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+

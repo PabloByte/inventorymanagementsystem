@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cancelar Inbound Order</title>
+
+  <meta name="api-base" content="/api" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/cancel-inbound.css" />
+  <script src="https://kit.fontawesome.com/a2e0e6ad5b.js" crossorigin="anonymous"></script>
+</head>
+
+<body class="context-cancel">
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-header">
+      <i class="fas fa-warehouse"></i>
+      <span>Atlas Ingeniería</span>
+    </div>
+
+    <div class="sidebar-section">General</div>
+    <ul class="sidebar-menu">
+      <li>
+        <a href="/pages/dashboard.html" class="menu-item">
+          <i class="fas fa-tachometer-alt"></i> <span>Dashboard</span>
+        </a>
+      </li>
+      <li>
+        <a href="/pages/inboundOrder.html" class="menu-item">
+          <i class="fas fa-boxes-stacked"></i> <span>Órdenes Entrantes</span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="sidebar-section">Acciones</div>
+    <ul class="sidebar-menu">
+      <li>
+        <a href="/pages/cancelInboundOrder.html" class="menu-item is-danger is-active">
+          <i class="fas fa-ban"></i> <span>Cancelar Orden de entrada</span>
+          <span class="chip chip-danger">Acción sin retroceso</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Header -->
+  <header class="page-header">
+    <h1>Cancelar Orden de entrada</h1>
+    <p class="muted">Selecciona una orden pendiente, revisa la previsualización y confirma la cancelación.</p>
+  </header>
+
+  <!-- Acción principal -->
+  <section class="page-actions">
+    <button id="btnCancel" class="btn btn-danger" type="button" disabled>
+      <i class="fa-solid fa-ban"></i> Cancelar orden
+    </button>
+  </section>
+
+  <!-- Contenido -->
+  <main class="content-wrap">
+    <!-- Selector de pendientes -->
+    <section class="controls card">
+      <div class="control-stack">
+        <label for="pendingSelect" class="control-label">Órdenes pendientes</label>
+        <div class="control-inline">
+          <select id="pendingSelect" class="input-select" aria-label="Selecciona una orden pendiente">
+            <!-- Se llena por JS -->
+          </select>
+          <button id="btnLoadPreview" class="btn" type="button" title="Ver previsualización">
+            Ver
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Previsualización tipo “hoja PDF” -->
+    <section id="previewPanel" class="preview-area">
+      <div class="sheet sheet--pdf">
+        <header class="sheet-header">
+          <div class="sheet-title">
+            <strong>Orden de Entrada</strong>
+            <small class="muted">Previsualización</small>
+          </div>
+          <span class="badge badge-pending" id="previewStatus">PENDING</span>
+        </header>
+
+        <div class="sheet-body">
+          <div class="sheet-grid">
+            <div class="sheet-field">
+              <div class="label">ID</div>
+              <div class="value" id="pv_id">—</div>
+            </div>
+            <div class="sheet-field">
+              <div class="label">N° Orden</div>
+              <div class="value" id="pv_orderNumber">—</div>
+            </div>
+            <div class="sheet-field">
+              <div class="label">Proveedor</div>
+              <div class="value" id="pv_supplier">—</div>
+            </div>
+            <div class="sheet-field">
+              <div class="label">Bodega</div>
+              <div class="value" id="pv_warehouse">—</div>
+            </div>
+            <div class="sheet-field">
+              <div class="label">Fecha creación</div>
+              <div class="value" id="pv_createdAt">—</div>
+            </div>
+          </div>
+
+          <div class="sheet-table-wrap">
+            <table class="table items" id="pv_items">
+              <thead>
+                <tr>
+                  <th>Código</th>
+                  <th>Producto</th>
+                  <th class="num">Cantidad</th>
+                  <th class="num">Costo Unit.</th>
+                  <th class="num">Total</th>
+                  <th>Serial</th>
+                  <th>Lote</th>
+                  <th>Dimensiones</th>
+                  <th>Peso</th>
+                  <th>Estado Cert.</th>
+                  <th>Obs.</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="empty">
+                  <td colspan="11">Seleccione una orden para ver la previsualización.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="alert alert-warning mt" id="pv_alert" hidden>
+            <p><strong>Nota:</strong> Esta acción es irreversible. Verifica la información antes de confirmar.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    
+  </main>
+
+  <!-- Modal de confirmación -->
+  <div id="cancelModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="cancelModalTitle">
+    <div class="modal-dialog">
+      <header class="modal-header">
+        <h3 id="cancelModalTitle">Confirmar cancelación</h3>
+      </header>
+      <section class="modal-body">
+        <p id="cancelSummary" class="mb-2"></p>
+
+        <label for="cancelReason" class="block-label">Motivo (opcional)</label>
+        <textarea id="cancelReason" rows="3" maxlength="255" class="input-textarea" placeholder="Ingresa un motivo si lo deseas..." autocomplete="off"></textarea>
+
+        <!-- Campo temporal para actor hasta que migres a Spring Security -->
+        <label for="cancelActor" class="block-label">Usuario (Obligatorio)</label>
+        <input id="cancelActor" type="text" class="input-text" placeholder="pablo" autocomplete="off"/>
+      </section>
+      <footer class="modal-actions">
+        <button id="btnConfirmCancel" class="btn btn-danger" type="button">Confirmar</button>
+        <button id="btnCloseModal" class="btn" type="button">Cerrar</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Loader global -->
+  <div id="pageLoader" class="loader-overlay hidden" aria-live="polite">
+    <div class="loader">Cargando…</div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+  <!-- Scripts (orden importa: config -> entity -> service -> pages) -->
+  <script type="module" src="/js/config/env.js"></script>
+  <script type="module" src="/js/entities/cancelInboundOrder.entity.js"></script>
+  <script type="module" src="/js/services/cancelInboundOrderService.js"></script>
+  <script type="module" src="/js/pages/cancelInboundOrder.pages.js"></script>
+
+  <noscript>Necesitas habilitar JavaScript para usar esta página.</noscript>
+</body>
+</html>
+
+

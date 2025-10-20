@@ -1,0 +1,164 @@
+/* ============================
+   Product Preview Card (CSS)
+   ============================ */
+
+/* Tema base con variables (ajústalas a tu paleta) */
+:root {
+  --pp-bg: #ffffff;
+  --pp-fg: #1a1a1a;
+  --pp-muted: #6b7280;            /* gris medio */
+  --pp-border: #e5e7eb;           /* gris claro */
+  --pp-shadow: rgba(2, 6, 23, 0.08);
+  --pp-shadow-strong: rgba(2, 6, 23, 0.18);
+  --pp-accent: #2563eb;           /* azul */
+  --pp-success: #16a34a;          /* verde */
+  --pp-warn: #d97706;             /* ámbar */
+  --pp-danger: #dc2626;           /* rojo */
+  --pp-badge-fg: #0b1020;         /* texto badge oscuro */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --pp-bg: #1b2a5f;
+    --pp-fg: #e5e7eb;
+    --pp-muted: #94a3b8;
+    --pp-border: #1e293b;
+    --pp-shadow: rgba(0, 0, 0, 0.3);
+    --pp-shadow-strong: rgba(0, 0, 0, 0.5);
+    --pp-badge-fg: #0b1020;
+  }
+}
+
+/* Estado inicial oculto (equivalente a display:none;) */
+.hidden { display: none; }
+
+/* Tarjeta ovalada con elevación y microinteracciones */
+.product-preview-card {
+  background: var(--pp-bg);
+  color: var(--pp-fg);
+  border: 1px solid var(--pp-border);
+  border-radius: 28px;                  /* ovalada */
+  padding: 16px 18px;
+  box-shadow: 0 6px 18px var(--pp-shadow);
+  transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+  will-change: transform, box-shadow;
+  max-width: 100%;
+}
+
+/* Hover: “sobresale” */
+.product-preview-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px var(--pp-shadow-strong);
+  border-color: color-mix(in oklab, var(--pp-border), var(--pp-accent) 35%);
+}
+
+/* Accesibilidad: si el usuario prefiere menos animaciones */
+@media (prefers-reduced-motion: reduce) {
+  .product-preview-card,
+  .product-preview-card:hover {
+    transition: none;
+    transform: none;
+  }
+}
+
+/* Header */
+.pp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed var(--pp-border);
+}
+
+.pp-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+/* Badge por estado (usa data-status en el span) */
+.pp-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;                 /* pastilla */
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1;
+  background: color-mix(in oklab, var(--pp-accent), white 75%);
+  color: var(--pp-badge-fg);
+  border: 1px solid color-mix(in oklab, var(--pp-accent), white 60%);
+}
+
+/* Colorea según estado conocido */
+.pp-badge[data-status="CERTIFICADO"],
+.pp-badge[data-status="APROBADO"],
+.pp-badge[data-status="OK"] {
+  background: color-mix(in oklab, var(--pp-success), white 78%);
+  border-color: color-mix(in oklab, var(--pp-success), white 62%);
+}
+
+.pp-badge[data-status="EN_PROCESO"],
+.pp-badge[data-status="PENDING"] {
+  background: color-mix(in oklab, var(--pp-warn), white 78%);
+  border-color: color-mix(in oklab, var(--pp-warn), white 62%);
+}
+
+.pp-badge[data-status="NO_CERTIFICADO"],
+.pp-badge[data-status="RECHAZADO"],
+.pp-badge[data-status="FAILED"] {
+  background: color-mix(in oklab, var(--pp-danger), white 78%);
+  border-color: color-mix(in oklab, var(--pp-danger), white 62%);
+}
+
+/* Cuerpo */
+.pp-body { padding-top: 12px; }
+
+/* Grid fluido: 4 columnas en desktop, 2 en tablets, 1 en móvil */
+.pp-row {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-bottom: 12px;
+}
+
+@media (max-width: 1100px) {
+  .pp-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  .pp-row { grid-template-columns: 1fr; }
+}
+
+/* Fila de campos largos (desc/observ) */
+.pp-row-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 640px) {
+  .pp-row-2 { grid-template-columns: 1fr; }
+}
+
+.pp-col { min-width: 0; }              /* evita overflow por textos largos */
+.pp-col-grow { flex: 1; }
+
+.pp-label {
+  color: var(--pp-muted);
+  font-size: 0.76rem;
+  margin-bottom: 4px;
+  letter-spacing: 0.2px;
+}
+
+.pp-value {
+  font-size: 0.94rem;
+  font-weight: 500;
+  word-break: break-word;
+}
+
+.pp-wrap {
+  white-space: pre-wrap;                /* respeta saltos de línea */
+  overflow-wrap: anywhere;              /* rompe palabras si es necesario */
+}
+
+/* Estado “visible” desde JS (quita el .hidden) */
+.product-preview-card.is-visible,
+#io_productPreview.is-visible { display: block; }
+

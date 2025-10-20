@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categorías - SpringWeb Admin</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://kit.fontawesome.com/a2e0e6ad5b.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h2><i class="fas fa-cogs"></i> Stark Ingenieria</h2>
+        </div>
+        <ul class="sidebar-menu">
+
+          <li><a href="/pages/dashboard.html" class="menu-item"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+          
+            <li>
+                <!-- CATEGORÍAS: importante data-module="categories" -->
+                <a href="#" class="menu-item active" data-module="categories"><i class="fas fa-list"></i> Categorías</a>
+            </li>
+            <!-- Más links (usar data-module="moduleName" para que SPA los capture) -->
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="content-header">
+            <!-- id=pageTitle lo usa dashboard.js -->
+            <h1 id="pageTitle">Categorías</h1>
+            <div class="user-info">
+                <!-- id=currentUser lo usa checkAuth() -->
+                <span id="currentUser">Welcome, Admin</span>
+            </div>
+        </header>
+
+        <!-- id=contentArea requerido por dashboard.js para inyectar vistas SPA -->
+        <div id="contentArea" class="content-area">
+            <!-- El dashboard.js inyectará aquí las vistas; dejamos una vista fallback para usuarios sin JS -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Listado de Categorías</h2>
+                </div>
+                <div class="card-body">
+                    <table id="categoriesTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Descripción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td colspan="3">Cargando... (si el SPA está activo esto se reemplazará)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- SCRIPTS: carga config -> dashboard (SPA) -> módulos específicos -->
+<script type="module" src="/js/config.js"></script>
+<script type="module" src="/js/dashboard.js"></script>
+<script type="module" src="/js/category.js"></script>
+
+</body>
+</html>
+
+
+

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Inbound Orders - SpringWeb Admin</title>
+  <link rel="stylesheet" href="/css/style.css"/>
+  <link rel="stylesheet" href="/css/pages/product-preview.css"/>
+  
+  <script src="https://kit.fontawesome.com/a2e0e6ad5b.js" crossorigin="anonymous"></script>
+  <meta name="api-base" content="/api">
+</head>
+<body>
+  <div class="dashboard-container">
+    <nav class="sidebar">
+      <div class="sidebar-header">
+        <h2><i class="fas fa-cogs"></i> Stark Ingenieria</h2>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="/pages/dashboard.html" class="menu-item"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li><a href="/pages/cancelInboundOrder.html" class="menu-item"><i class="fas fa-chart-line"></i> Cancelar orden entrante</a></li>
+        <li><a href="/pages/inboundreceipt.html" class="menu-item"><i class="fas fa-cog"></i> Recibir orden entrante</a></li>
+      </ul>
+    </nav>
+
+    <div class="main-content">
+      <header class="content-header">
+        <h1 id="pageTitle"><i class="fas fa-truck-loading"></i> Ordenes Entrantres </h1>
+        <div class="user-info">
+          <span id="currentUser">Admin</span> ·
+          <a id="signOut" href="#" class="menu-item" style="display:inline;">Salir</a>
+        </div>
+      </header>
+
+
+
+     <main class="content-area" id="contentArea">
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Remisiones Entrantes</h3>
+    </div>
+
+    <div class="card-body">
+      <!-- Filtros básicos -->
+      <div class="form-row">
+        <div class="form-col">
+          <label for="io_supplierSelect">Proveedor</label>
+          <select id="io_supplierSelect" class="form-control">
+            <option value="">Cargando proveedores...</option>
+          </select>
+        </div>
+        <div class="form-col">
+          <label for="io_status">Estado</label>
+          <select id="io_status" class="form-control">
+            <option value="PENDING">PENDING</option>
+          </select>
+        </div>
+        <div class="form-col">
+          <label for="io_warehouseSelect">Bodega de destino</label>
+          <select id="io_warehouseSelect" class="form-control">
+            <option value="">Cargando bodegas...</option>
+          </select>
+        </div>
+      </div>
+
+      <hr/>
+
+      <!-- Agregar item -->
+      <h4 style="margin-bottom:10px;">Agregar item</h4>
+      <div class="form-row" style="align-items:flex-end; gap:12px;">
+        <div class="form-col">
+          <label for="io_productSelect">Producto</label>
+          <select id="io_productSelect" class="form-control">
+            <option value="">Cargando productos...</option>
+          </select>
+        </div>
+        <div class="form-col">
+          <label for="io_productIdManual">O productId</label>
+          <div style="display:flex; gap:6px;">
+            <input id="io_productIdManual" class="form-control" placeholder="productId (opcional)"/>
+            <button class="btn btn-secondary" id="io_fetchProductBtn" title="Buscar producto por ID">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </div>
+        <div class="form-col" style="max-width:160px;">
+          <label for="io_quantity">Cantidad</label>
+          <input id="io_quantity" type="number" min="1" class="form-control" value="1"/>
+        </div>
+        <div class="form-col" style="max-width:200px;">
+          <button class="btn btn-primary" id="io_addItemBtn"><i class="fas fa-plus"></i> Agregar item</button>
+        </div>
+      </div>
+
+     <!-- PREVISUALIZACIÓN DEL PRODUCTO -->
+<div id="io_productPreview" class="product-preview-card hidden">
+  <div class="pp-header">
+    <strong id="pp_name" class="pp-title">—</strong>
+    <span id="pp_status" class="pp-badge" data-status="—">—</span>
+  </div>
+
+  <div class="pp-body">
+    <div class="pp-row">
+      <div class="pp-col">
+        <div class="pp-label">Código (SKU)</div>
+        <div id="pp_sku" class="pp-value">—</div>
+      </div>
+      <div class="pp-col">
+        <div class="pp-label">Barcode</div>
+        <div id="pp_barcode" class="pp-value">—</div>
+      </div>
+      <div class="pp-col">
+        <div class="pp-label">Serial</div>
+        <div id="pp_serial" class="pp-value">—</div>
+      </div>
+      <div class="pp-col">
+        <div class="pp-label">Lote</div>
+        <div id="pp_lote" class="pp-value">—</div>
+      </div>
+    </div>
+
+    <div class="pp-row">
+      <div class="pp-col">
+        <div class="pp-label">Dimensiones</div>
+        <div id="pp_dimensiones" class="pp-value">—</div>
+      </div>
+      <div class="pp-col">
+        <div class="pp-label">Peso</div>
+        <div id="pp_peso" class="pp-value">—</div>
+      </div>
+      <div class="pp-col">
+        <div class="pp-label">Estado certificado</div>
+        <div id="pp_cert" class="pp-value">—</div>
+      </div>
+      <div class="pp-col">
+        <div class="pp-label">Stock</div>
+        <div id="pp_stock" class="pp-value">—</div>
+      </div>
+    </div>
+
+    <div class="pp-row pp-row-2">
+      <div class="pp-col pp-col-grow">
+        <div class="pp-label">Descripción</div>
+        <div id="pp_desc" class="pp-value pp-wrap">—</div>
+      </div>
+      <div class="pp-col pp-col-grow">
+        <div class="pp-label">Observación</div>
+        <div id="pp_observ" class="pp-value pp-wrap">—</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+      <!-- Tabla detallada de ítems -->
+      <div class="table-container" style="margin-top:15px;">
+        <table class="table" id="io_itemsTable">
+          <thead>
+            <tr>
+              <th>Producto Id</th>
+              <th>Nombre</th>
+              <th>Código</th>
+              <th>Serial</th>
+              <th>Lote</th>
+              <th>Dimensiones</th>
+              <th>Peso</th>
+              <th>Cantidad</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td colspan="9">No hay items</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="margin-top:16px;">
+        <button class="btn btn-success" id="io_createOrderBtn"><i class="fas fa-check"></i> Crear orden</button>
+        <button class="btn btn-secondary" id="io_clearBtn"><i class="fas fa-broom"></i> Limpiar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal resultado (igual que antes) -->
+  <div id="io_resultModal" class="modal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-header" style="background:#3498db; color:white; display:flex; justify-content:space-between; align-items:center;">
+        <h3 style="margin:0;">Orden creada</h3>
+        <button class="close" id="io_closeModalBtn" aria-label="Cerrar">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom:12px;">Número de orden: <strong id="io_orderNumber">—</strong></p>
+        <p style="margin-bottom:12px;">Puedes descargar el PDF generado:</p>
+        <a id="io_pdfLink" href="#" target="_blank" class="btn btn-primary"><i class="fas fa-file-download"></i> Descargar PDF</a>
+      </div>
+      <div class="modal-footer" style="display:flex; justify-content:flex-end; gap:10px;">
+        <button class="btn btn-secondary" id="io_closeModalBtn2">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+
+
+
+
+    </div>
+  </div>
+
+  <!-- Orden y rutas en minúscula -->
+  <script type="module" src="/js/config/env.js"></script>
+  <script type="module" src="/js/entities/inboundorder.js"></script>
+  <script type="module" src="/js/services/inboundorderservice.js"></script>
+  <script type="module" src="/js/pages/inboundorder.pages.js"></script>
+</body>
+</html>
+

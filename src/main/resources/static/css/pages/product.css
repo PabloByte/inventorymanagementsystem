@@ -1,0 +1,112 @@
+/* =============== Product Page (extiende tu estilo base) =============== */
+
+/* Utilidades de alineación */
+.ta-right { text-align: right; }
+.ta-center { text-align: center; }
+
+/* Grid compacto para formularios */
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+@media (max-width: 992px) {
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+}
+
+/* Inputs/Selects consistentes con tu .form-control */
+.input,
+#reorder-threshold,
+#reorder-mode,
+#product-form input,
+#product-form select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  background: #fff;
+  transition: border-color .2s, box-shadow .2s;
+}
+.input:focus,
+#product-form input:focus,
+#product-form select:focus,
+#reorder-threshold:focus,
+#reorder-mode:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52,152,219,.15);
+}
+
+/* Tabla responsiva */
+.table-responsive { width: 100%; overflow-x: auto; }
+
+/* Estado “por reorden” (stock <= ROP) */
+.row-danger { background: #fff4f4; }
+.row-danger:hover { background: #ffecec; }
+
+/* Badges (contador y estados) */
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  background: #ecf0f1;
+  color: #2c3e50;
+}
+.badge-success { background: #27ae60; color: #fff; }
+.badge-muted { background: #95a5a6; color: #fff; }
+
+/* Botones XS para acciones de tabla */
+.btn.btn-xs {
+  padding: 6px 10px;
+  font-size: 12px;
+  border-radius: 4px;
+}
+
+/* Subtítulo en celda (para barcode debajo de nombre) */
+.table .sub {
+  font-size: 12px;
+  color: #7f8c8d;
+  margin-top: 2px;
+}
+
+/* Nombre del producto más notorio en la celda */
+.table .name {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+/* Área de filtros/acciones arriba de la tabla */
+.card .filters,
+.card .actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Alerts para feedback (éxito / error) */
+.alert {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+.alert-success { background: #eafaf1; color: #1e8449; border: 1px solid #d2f4e3; }
+.alert-danger  { background: #fdecea; color: #c0392b; border: 1px solid #f8d7da; }
+
+/* Encabezados dentro de tarjetas de Product */
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Campos numéricos angostos (si los usas en toolbar) */
+.input-number-sm { width: 120px; }
+
+/* Espaciado en acciones de formulario */
+.form-actions { margin-top: 16px; display: flex; gap: 10px; justify-content: flex-end; }
+
+/* Tabla: ajustes menores de densidad */
+.table th, .table td { vertical-align: middle; }

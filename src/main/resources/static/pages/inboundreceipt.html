@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Inbound Receipt - SpringWeb Admin</title>
+  <link rel="stylesheet" href="/css/style.css"/>
+  <script src="https://kit.fontawesome.com/a2e0e6ad5b.js" crossorigin="anonymous"></script>
+
+  <!-- usa /js/config/env.js; si quieres, puedes fijar la base -->
+  <meta name="api-base" content="/api">
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <div class="sidebar-header">
+        <h2><i class="fas fa-cogs"></i> Stark Ingenieria</h2>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="/pages/dashboard.html" class="menu-item"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+       <li><a href="/pages/inboundOrder.html" class="menu-item"><i class="fas fa-cog"></i> Remisiones Entrantes</a></li>
+      </ul>
+    </nav>
+
+    <!-- Main -->
+    <div class="main-content">
+      <header class="content-header">
+        <h1 id="pageTitle"><i class="fas fa-clipboard-check"></i> Recepción de Orden (Inbound Receipt)</h1>
+        <div class="user-info">
+          <span id="currentUser">Admin</span> ·
+          <a id="signOut" href="#" class="menu-item" style="display:inline;">Salir</a>
+        </div>
+      </header>
+
+      <main class="content-area" id="contentArea">
+        <!-- Card Selección de Orden -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Seleccionar orden PENDING</h3>
+          </div>
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-col">
+                <label for="ir_orderSelect">Número de Orden</label>
+                <select id="ir_orderSelect" class="form-control">
+                  <option value="">Cargando órdenes PENDING...</option>
+                </select>
+              </div>
+              <div class="form-col" style="max-width:220px;">
+                <button class="btn btn-primary" id="ir_loadOrderBtn">
+                  <i class="fas fa-search"></i> Cargar orden
+                </button>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-col">
+                <label>Proveedor</label>
+                <input id="ir_supplier" class="form-control" disabled placeholder="—"/>
+              </div>
+              <div class="form-col">
+                <label>Bodega</label>
+                <input id="ir_warehouse" class="form-control" disabled placeholder="—"/>
+              </div>
+              <div class="form-col">
+                <label>Estado</label>
+                <input id="ir_status" class="form-control" disabled placeholder="—"/>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card Ítems a recibir -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Ítems a recibir</h3>
+          </div>
+          <div class="card-body">
+
+            <div class="form-row">
+              <div class="form-col">
+                <label for="ir_receivedBy">Recibido por</label>
+                <input id="ir_receivedBy" class="form-control" placeholder="Nombre del receptor (opcional)"/>
+              </div>
+              <div class="form-col">
+                <label for="ir_note">Nota del recibo</label>
+                <input id="ir_note" class="form-control" placeholder="Nota general del recibo (opcional)"/>
+              </div>
+            </div>
+
+            <div class="table-container" style="margin-top:10px;">
+              <table class="table" id="ir_itemsTable">
+                <thead>
+                  <tr>
+                    <th class="th-sort">Código / Producto</th>
+                    <th style="width:120px;" class="ta-center">Pedido</th>
+                    <th style="width:140px;" class="ta-center">Pendiente</th>
+                    <th style="width:150px;" class="ta-center">Recibir ahora</th>
+                    <th style="width:160px;" class="ta-center">Costo Unitario</th>
+                    <th>Nota</th>
+                    <th style="width:90px;" class="ta-center">Acción</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td colspan="7">Cargue una orden para ver los ítems.</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Totales en vivo -->
+<div class="card" style="margin-top:16px;">
+  <div class="card-header">
+    <h3 class="card-title">Totales</h3>
+  </div>
+  <div class="card-body">
+    <div class="form-row">
+      <div class="form-col">
+        <label>Renglones (actual)</label>
+        <input id="ir_t_lines" class="form-control" disabled value="0"/>
+      </div>
+      <div class="form-col">
+        <label>Cantidad total (actual)</label>
+        <input id="ir_t_qty" class="form-control" disabled value="0"/>
+      </div>
+      <div class="form-col">
+        <label>Costo total (actual)</label>
+        <input id="ir_t_cost" class="form-control" disabled value="$0"/>
+      </div>
+    </div>
+
+    <div class="form-row" style="margin-top:10px;">
+      <div class="form-col">
+        <label>Orden — Total pedido</label>
+        <input id="ir_o_ordered" class="form-control" disabled value="—"/>
+      </div>
+      <div class="form-col">
+        <label>Orden — Total recibido</label>
+        <input id="ir_o_recv" class="form-control" disabled value="—"/>
+      </div>
+      <div class="form-col">
+        <label>Orden — Total pendiente</label>
+        <input id="ir_o_pend" class="form-control" disabled value="—"/>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+            <div style="margin-top:16px;">
+              <button class="btn btn-success" id="ir_receiveBtn">
+                <i class="fas fa-check-circle"></i> Recibir y Afectar Inventario
+              </button>
+              <button class="btn btn-secondary" id="ir_clearBtn">
+                <i class="fas fa-broom"></i> Limpiar
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal resultado (PDF) -->
+        <div id="ir_resultModal" class="modal" aria-hidden="true">
+          <div class="modal-dialog">
+           <div class="modal-header" style="background:#f28500; color:white; display:flex; justify-content:space-between; align-items:center;">
+
+              <h3 style="margin:0;">Recibo creado</h3>
+              <button class="close" id="ir_closeModalBtn" aria-label="Cerrar">&times;</button>
+            </div>
+            <div class="modal-body">
+              <p style="margin-bottom:12px;">Número de recibo: <strong id="ir_receiptNumber">—</strong></p>
+              <p style="margin-bottom:12px;">Puedes descargar el PDF generado:</p>
+
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <a id="ir_pdfLink" href="#" target="_blank" rel="noopener" class="btn btn-primary">
+              <i class="fas fa-file-pdf"></i> Ver recibo (PDF)
+                 </a>
+                <a id="ir_downloadPdfBtn" href="#" class="btn">
+                  <i class="fas fa-file-download"></i> Descargar PDF
+                   </a>
+                   </div>
+
+
+
+            </div>
+            <div class="modal-footer" style="display:flex; justify-content:flex-end; gap:10px;">
+              <button class="btn btn-secondary" id="ir_closeModalBtn2">Cerrar</button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Scripts (orden y en minúscula) -->
+  <script type="module" src="/js/config/env.js"></script>
+  <script type="module" src="/js/entities/inboundreceipt.js"></script>
+  <script type="module" src="/js/services/inboundreceiptservice.js"></script>
+  <script type="module" src="/js/pages/inboundreceipt.pages.js"></script>
+</body>
+</html>

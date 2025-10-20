@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Products - SpringWeb Admin</title>
+  <link rel="stylesheet" href="/css/style.css"/>
+  <!-- <link rel="stylesheet" href="/css/pages/product.css"/> -->
+  <!-- <meta name="api-base" content="https://tu-backend.com/api"> -->
+</head>
+<body>
+<div class="dashboard-container">
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-header">
+      <h2>Stark Ingeniería</h2>
+    </div>
+    <ul class="sidebar-menu">
+      <li><a href="/pages/dashboard.html" class="menu-item"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+      <li><a href="/pages/category.html" class="menu-item"><i class="fas fa-tags"></i> Categorias</a></li>
+      <li><a href="/pages/supplier.html" class="menu-item"><i class="fas fa-truck"></i> Proveedores</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main -->
+  <main class="main-content">
+    <header class="content-header">
+      <h1>Products</h1>
+      <div class="user-info">
+        <span>Welcome, Admin</span>
+      </div>
+    </header>
+
+    <div class="content-area">
+      <!-- Acciones / filtros -->
+      <div class="card">
+        <div class="card-body" style="display:flex; gap:12px; align-items:center; flex-wrap:wrap">
+          <button id="btn-refresh" class="btn btn-secondary">Refrescar</button>
+
+          <div style="display:flex; gap:8px; align-items:center">
+            <label for="reorder-threshold"><strong>Reorder:</strong></label>
+            <select id="reorder-mode" class="input">
+              <option value="own">Ver productos con prioridad de realizar pedido</option>
+              <option value="global">ver productos por Stock igual o menor a </option>
+            </select>
+            <input id="reorder-threshold" class="input" type="number" min="0" step="1" style="width:120px" placeholder="invent.min" disabled>
+            <button id="btn-reorder" class="btn btn-primary">VER PRODUCTOS</button>
+            <span id="reorder-count" class="badge">0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body" style="display:flex; gap:12px; align-items:center; flex-wrap:wrap">
+          <input id="search-input" class="search-input" placeholder="Buscar por nombre o SKU..." />
+          <button id="btn-search" class="btn btn-primary">Buscar</button>
+          <button id="btn-clear-search" class="btn btn-secondary">Limpiar</button>
+          <button id="btn-export-csv" class="btn btn-success">Export CSV</button>
+        </div>
+      </div>
+
+      <!-- Tabla -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Listado de productos</h2>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th data-sort="sku"              class="th-sort">Código</th>
+                  <th data-sort="name"             class="th-sort">Nombre</th>
+                  <th data-sort="categoryName"     class="th-sort">Categoría</th>
+                  <th data-sort="supplierName"     class="th-sort">Proveedor</th>
+                  <th data-sort="price"            class="th-sort ta-right">Precio</th>
+                  <th data-sort="stock"            class="th-sort ta-center">Stock</th>
+                  <th data-sort="reorderPoint"     class="th-sort ta-center">ROP</th>
+                  <th data-sort="status"           class="th-sort ta-center">Estado</th>
+                  <!-- Nuevos campos -->
+                  <th data-sort="serial"           class="th-sort">Serial</th>
+                  <th data-sort="lote"             class="th-sort">Lote</th>
+                  <th data-sort="dimensiones"      class="th-sort">Dimensiones</th>
+                  <th data-sort="peso"             class="th-sort ta-right">Peso (kg)</th>
+                  <th data-sort="estadoCertificado" class="th-sort ta-center">Certificación</th>
+                  <th class="ta-center">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="products-tbody">
+                <!-- filas renderizadas por JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formulario -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Crear / Editar Producto</h2>
+        </div>
+        <div class="card-body">
+          <form id="product-form">
+            <input type="hidden" name="id" />
+
+            <div class="grid-2">
+              <div class="form-group">
+                <label>Codigo</label>
+                <!-- CORREGIDO: name="sku" para alinear con backend/JS -->
+                <input name="sku" type="text" required placeholder="Código unico">
+              </div>
+              <div class="form-group">
+                <label>Barcode</label>
+                <input name="barcode" type="text" placeholder="Opcional">
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="form-group">
+                <label>Nombre *</label>
+                <input name="name" type="text" required placeholder="Nombre del producto">
+              </div>
+              <div class="form-group">
+                <label>Descripción *</label>
+                <input name="description" type="text" required placeholder="Descripción corta">
+              </div>
+            </div>
+
+            <div class="grid-3">
+              <div class="form-group">
+                <label>Precio *</label>
+                <input name="price" type="number" min="0" step="1" required placeholder="Precio en COP">
+              </div>
+              <div class="form-group">
+                <label>Stock *</label>
+                <label class="muted">El stock solo se modifica por ingresos/salidas de bodega</label>
+              </div>
+              <div class="form-group">
+                <label>Stock mínimo *</label>
+                <input name="reorderPoint" type="number" min="0" step="1" required placeholder="Ej: 5">
+              </div>
+            </div>
+
+            <div class="grid-3">
+              <div class="form-group">
+                <label>Status *</label>
+                <select name="status" required>
+                  <option value="ACTIVE">ACTIVE</option>
+                  <option value="INACTIVE">INACTIVE</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="categoryId">Categoría *</label>
+                <select name="categoryId" id="categoryId" required>
+                  <option value="" selected disabled>-- Selecciona una categoría --</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="supplierId">Proveedor *</label>
+                <select name="supplierId" id="supplierId" required>
+                  <option value="" selected disabled>-- Selecciona un proveedor --</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- ====== Nuevos campos ====== -->
+            <div class="grid-3">
+              <div class="form-group">
+                <label>Serial</label>
+                <input name="serial" type="text" placeholder="Ej: SN-ABC-1234">
+              </div>
+              <div class="form-group">
+                <label>Lote</label>
+                <input name="lote" type="text" placeholder="Ej: LOTE-2025-001">
+              </div>
+              <div class="form-group">
+                <label>Dimensiones</label>
+                <input name="dimensiones" type="text" placeholder="Ej: 10x20x30 cm">
+              </div>
+            </div>
+
+            <div class="grid-3">
+              <div class="form-group">
+                <label>Peso (kg)</label>
+                <input name="peso" type="number" min="0" step="0.001" placeholder="Ej: 1.250">
+              </div>
+              <div class="form-group">
+                <label>Certificación</label>
+                <!-- valores EXACTOS del CHECK de BD -->
+                <select name="estadoCertificado">
+                  <option value="">-- Selecciona --</option>
+                  <option value="CERTIFICADO">CERTIFICADO</option>
+                  <option value="NO_CERTIFICADO">NO_CERTIFICADO</option>
+                  <option value="EN_PROCESO">EN_PROCESO</option>
+                  <option value="VENCIDO">VENCIDO</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Observación</label>
+                <input name="observacion" type="text" placeholder="Notas, restricciones, etc.">
+              </div>
+            </div>
+            <!-- =========================== -->
+
+            <div class="form-actions">
+              <button type="submit" id="btn-save" class="btn btn-primary">Guardar</button>
+              <button type="button" id="btn-reset-form" class="btn btn-secondary">Limpiar</button>
+            </div>
+          </form>
+          <div id="product-message"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- JS -->
+<link rel="stylesheet" href="/css/pages/product.css">
+<script type="module" src="/js/pages/product.pages.js"></script>
+<script src="https://kit.fontawesome.com/a2e0e9f4d6.js" crossorigin="anonymous"></script>
+</body>
+</html>

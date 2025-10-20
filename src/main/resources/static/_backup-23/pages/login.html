@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Operation Spring Web - Login</title>
+    <link rel="stylesheet" href="/css/login.css">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+</head>
+<body class="login-body">
+    <div class="login-container">
+        <div class="login-header">
+            <img src="/image/starkLogo.jpg" alt="Emblem" class="emblem">
+            <h1>Sistema de Gestion De Inventarios</h1>
+            <p class="sub-header"> Sistema de manejo de entrada y salida de almacen personalizado</p>
+        </div>
+
+        <form id="loginForm" class="login-form">
+            <div class="form-group">
+                <label for="username">User:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+
+        <div class="warning-footer">
+            <p>PROPIEDAD DE INDUSTRIAS STARK.</p>
+        </div>
+    </div>
+
+    <script type="module">
+        // No hacemos GET de verificación para evitar errores si backend aún no soporta GET.
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+
+            // LOGIN DE PRUEBA (local)
+            if (username === 'StarkIngenieria' && password === 'Stark') {
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('username', username);
+
+                // Redirige al dashboard estático
+                window.location.href = '/pages/dashboard.html';
+
+            } else {
+                alert('Credenciales inválidas. Usa StarkIngenieria / Stark');
+            }
+        });
+    </script>
+</body>
+</html>
