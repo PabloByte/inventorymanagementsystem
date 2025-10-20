@@ -2,7 +2,9 @@
 FROM eclipse-temurin:17-jdk AS build
 WORKDIR /app
 COPY . .
-RUN ./mvnw -q -DskipTests package || mvn -q -DskipTests package
+# da permisos al wrapper y compila; si faltara el wrapper, instala maven y compila
+RUN chmod +x mvnw && ./mvnw -q -DskipTests package || (apt-get update && apt-get install -y maven && mvn -q -DskipTests package)
+
 
 # ----- Runtime -----
 FROM eclipse-temurin:17-jre
