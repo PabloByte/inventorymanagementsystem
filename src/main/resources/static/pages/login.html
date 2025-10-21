@@ -6,7 +6,9 @@
   <title>Operation Spring Web - Login</title>
 
   <!-- API base: apunta al BACKEND en Render -->
-  <meta name="api-base" content="https://inventorymanagementsystembackend-to9c.onrender.com/api">
+<script src="/config/runtime-config.js"></script>
+<script type="module" src="/js/config/env.js?v=3"></script>
+
 
   <link rel="stylesheet" href="/css/login.css">
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
@@ -38,12 +40,11 @@
     </div>
   </div>
 
-  <!-- Carga primero la config de entorno -->
-  <script type="module" src="/js/config/env.js"></script>
+
 
   <!-- Tu script de login -->
   <script type="module">
-    import { apiUrl } from '/js/config/env.js';
+    import { apiUrl } from '/js/config/env.js?v=3';
     console.log('API base:', apiUrl); // Debe imprimir: https://inventorymanagementsystembackend-to9c.onrender.com/api
 
     document.getElementById('loginForm').addEventListener('submit', (e) => {
