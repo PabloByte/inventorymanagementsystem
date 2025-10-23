@@ -1,64 +1,84 @@
-## Spring Web Operation
+# Inventory Management System — Spring Boot 3 (Java 17)
 
-A compact Spring Boot web application demonstrating CRUD operations with REST endpoints and web pages.
+[![CI](https://github.com/PabloByte/inventorymanagementsystem/actions/workflows/ci.yml/badge.svg)]
+[(https://github.com/PabloByte/inventorymanagementsystem/actions/workflows/ci.yml)]
+![Java 17](https://img.shields.io/badge/Java-17-red)
+![Spring Boot 3](https://img.shields.io/badge/Spring_Boot-3.x-brightgreen)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## Quick Start |  Now 123
+API de gestión de inventarios con **Swagger** y **Actuator**, migraciones con **Flyway** y generación de **PDF** para órdenes/recibos.
 
-This guide will help you get "Operation Spring Web" up and running quickly.
+> **Nota demo (plan gratis):** el primer request puede demorar por *cold start*. Verifique estado en **/actuator/health** (`UP`).
 
-### Prerequisites
+## 🚀 Demo
+- **API base:** https://inventorymanagementsystem-w4nu.onrender.com
+- **Swagger:** https://inventorymanagementsystem-w4nu.onrender.com/swagger-ui.html
+- **Health:** https://inventorymanagementsystembackend-to9c.onrender.com/actuator/health
 
-* **Java 21**: Ensure you have Java Development Kit (JDK) 21 installed.
-* **Maven**: This project uses Maven for dependency management and building.
+---
 
-### Running the Application
+## 📌 Estado actual (16/10/2025)
+- **PRODUCTOS**
+  - Filtro por prioridad para reposición
+  - Pedido menor a stock personalizado
+  - Exportar CSV
+  - Listar / Crear / Editar  
+  - **No se implementa borrar** (para preservar historial)
 
-There are two primary ways to run this application:
+- **CATEGORÍA**
+  - Filtrar por categoría con detalle de productos (id, nombre, descripción, precio, stock, proveedor, serial, lote, estadoCertificado, observación)
+  - Crear / Actualizar  
+  - **No eliminar** (no afectar inventario)
 
-#### Method 1: Using Maven Wrapper (Command Line)
+- **ÓRDENES ENTRANTES (InboundOrder)**
+  - Crear orden (proveedor, bodega, estado inicial `PENDING`)
+  - Selección de productos con **detalle enriquecido** (nombres similares, atributos diferenciadores)
+  - **PDF**: id, número de orden, proveedor, estado, bodega, fecha, código/producto, cantidad, costo unitario, total, serial, lote, dimensiones, peso, estadoCertificado, observaciones
 
-Navigate to the project's root directory in your terminal and execute the following command:
+- **RECIBIR ORDEN ENTRANTE (InboundReceipt)**
+  - Cargar orden, comparar pedido vs recibido
+  - Nota de recepción
+  - Calcula **pendientes**
+  - **PDF** de recibo
 
-```bash
-./mvnw clean spring-boot:run
-```
+- **CANCELAR ORDEN ENTRANTE**
+  - Cancela sin afectar inventario
 
-This command will clean the project, build it, and then start the Spring Boot application.
+- **SUPPLIER**
+  - Crear proveedor (pendiente CRUD completo + NIT vía Flyway)
 
-#### Method 2: Using an IDE (IntelliJ IDEA / VS Code)
+- **STOCK**: autogestionado  
+- **INVENTORY LEDGER**: autogestionado
 
-1. **Import the Project**: Open your IDE and import the project as a Maven project.
-    * **IntelliJ IDEA**: Open -> Navigate to the project's `pom.xml` file and select it.
-    * **VS Code**: File -> Open Folder -> Select the project's root directory. Ensure you have the necessary Java extensions installed.
-2. **Run the Application**:
-    * **IntelliJ IDEA**: Locate the `SpringWebApplication.java` file (usually in `src/main/java/com/springweb/`) and run it directly from the IDE (e.g., right-click and select "Run 'SpringWebApplication.main()'").
-    * **VS Code**: Use the "Run" button or the "Run and Debug" view to start the application.
+- **WAREHOUSE**
+  - **Pendiente** CRUD completo
 
-### Accessing the Application
+- **OUTBOUND ORDER**
+  - **Pendiente** CRUD + PDF (cliente/destino, entre bodegas)
 
-Once the application is running, you can access it in your web browser:
+- **SEGURIDAD**
+  - **En implementación:** Spring Security (JWT, rol “encargado”)
 
-* **Login Page**: `http://localhost:8082/login` (Default port is 8082)
-* **Dashboard**: `http://localhost:8082/dashboard` (After successful login)
+---
 
-**Demo Credentials**:
+## 🧠 Qué demuestra este proyecto
+- Diseño de **API REST** documentada con **Swagger/OpenAPI**
+- Observabilidad mínima: **Actuator** (`/health`) y *build info* (por perfiles)
+- Persistencia con **JPA/Hibernate** + **Flyway**
+- Generación de **PDF** (Apache PDFBox) para flujos operativos
+- Perfiles configurados: `local` y `supabase` (demo en nube)
+- **CI** con GitHub Actions (build en cada push/PR)
 
-* **Username**: `admin`
-* **Password**: `whoami`
+---
 
-## Project Structure
+## 🧱 Stack
+Java 17 • Spring Boot 3 • Spring Web • Spring Data JPA • PostgreSQL/MySQL • Flyway • MapStruct • Apache PDFBox • Actuator • OpenAPI (springdoc)
 
-This project utilizes:
+---
 
-* **Spring Boot**: For rapid application development.
-* **Spring Data JPA**: For database interaction.
-* **Thymeleaf**: For server-side rendered web pages.
-* **H2 Database**: An in-memory database for development purposes.
+## ▶️ Ejecutar en local
+1. Configura DB en `application-local.yml`.  
+2. Arranca con el perfil `local`:
+   ```bash
+   mvn clean spring-boot:run -Dspring.profiles.active=local
 
-## Troubleshooting
-
-If you encounter issues, consider the following common solutions:
-
-* **Port Conflict**: If port 8082 is already in use, you can change it in `src/main/resources/application.properties` by modifying `server.port`.
-* **Java Version**: Ensure your IDE and environment are configured to use Java 21.
-* **Maven Issues**: If dependencies are not resolving, try reloading the Maven project in your IDE or running `mvn clean install` from the command line.
