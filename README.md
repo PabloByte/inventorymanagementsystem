@@ -14,10 +14,10 @@ API de gestión de inventarios con **Swagger** y **Actuator**, migraciones con *
 - **API base:** https://inventorymanagementsystem-w4nu.onrender.com
 - **Swagger:** https://inventorymanagementsystem-w4nu.onrender.com/swagger-ui.html
 - **Health:** https://inventorymanagementsystembackend-to9c.onrender.com/actuator/health
-- **Swagger:** https://inventorymanagementsystembackend-to9c.onrender.com/docs/swagger.png
-- **Arquitectura:** https://inventorymanagementsystembackend-to9c.onrender.com/docs/architecture.png
-- **Entities:** https://inventorymanagementsystembackend-to9c.onrender.com/docs/entities.png
-- **Process:** https://inventorymanagementsystembackend-to9c.onrender.com/docs/process.png
+- **Swagger:** https://github.com/PabloByte/inventorymanagementsystem/blob/main/swagger.png
+- **Arquitectura:** https://github.com/PabloByte/inventorymanagementsystem/blob/main/docs/architecture.png
+- **Entities:** https://github.com/PabloByte/inventorymanagementsystem/blob/main/docs/entities.png
+- **Process:** https://github.com/PabloByte/inventorymanagementsystem/blob/main/docs/process.png
 
 ---
 
