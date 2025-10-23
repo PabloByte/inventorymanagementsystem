@@ -12,7 +12,7 @@ API de gestión de inventarios con **Swagger** y **Actuator**, migraciones con *
 
 ## 🚀 Demo
 - **API base:** https://inventorymanagementsystem-w4nu.onrender.com
-- **Swagger:** https://inventorymanagementsystem-w4nu.onrender.com/swagger-ui.html
+- **Swagger:** https://inventorymanagementsystembackend-to9c.onrender.com/swagger-ui/index.html
 - **Health:** https://inventorymanagementsystembackend-to9c.onrender.com/actuator/health
 - **Swagger:** https://github.com/PabloByte/inventorymanagementsystem/blob/main/swagger.png
 - **Arquitectura:** https://github.com/PabloByte/inventorymanagementsystem/blob/main/docs/architecture.png
@@ -21,7 +21,7 @@ API de gestión de inventarios con **Swagger** y **Actuator**, migraciones con *
 
 ---
 
-## 📌 Estado actual (16/10/2025)
+## 📌 Estado actual 
 - **PRODUCTOS**
   - Filtro por prioridad para reposición
   - Pedido menor a stock personalizado
